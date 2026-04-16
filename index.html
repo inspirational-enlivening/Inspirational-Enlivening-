@@ -115,7 +115,7 @@
 
   <!-- VIDEO SECTION -->
   <div class="section">
-    <h2>Inspirational Video</h2>
+    <h2>Inspirational QUOTE By Inspirational </h2>
 
     <!-- Replace with your YouTube embed -->
     <video controls>
@@ -157,65 +157,6 @@ const quotes = [
 
 document.getElementById("quote").innerText =
   quotes[Math.floor(Math.random() * quotes.length)];
-</script>
-
-</body>
-</html>    }
-
-    .price {
-      color: gold;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    button {
-      background: gold;
-      color: black;
-      border: none;
-      padding: 12px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background: black;
-      color: gold;
-    }
-  </style>
-</head>
-<body>
-
-<header>Inspirational Enlivening</header>
-
-<div class="container">
-  <div class="book-card">
-    <h2>Fear of Failing</h2>
-    <p class="price">₦2000</p>
-
-    <p>
-      Fear has stopped many people from stepping into their full potential.
-      This book will help you overcome the fear of failure and pursue your purpose boldly.
-    </p>
-
-    <button onclick="pay()">Buy Now</button>
-  </div>
-</div>
-
-<script src="https://js.paystack.co/v1/inline.js"></script>
-<script>
-  function pay() {
-    var handler = PaystackPop.setup({
-      key: "YOUR_PAYSTACK_PUBLIC_KEY",
-      email: "customer@email.com",
-      amount: 200000,
-      callback: function(response){
-        alert("Payment successful! You will receive your book.");
-      }
-    });
-    handler.openIframe();
-  }
 </script>
 
 </body>
