@@ -131,28 +131,32 @@ function submitPayment() {
   let email = document.getElementById("email").value;
   let note = document.getElementById("note").value;
 
-  if(name === "" || email === "") {
+  if (!name || !email) {
     alert("Please fill in your name and email");
     return;
   }
 
   let message =
-`Hello, I just made payment for Fear of Failing.
+`Hello, I made payment via Opay.
 
 Name: ${name}
 Email: ${email}
-Note: ${note}`;
+Note: ${note || "None"}`;
 
-  window.open(`https://wa.me/2348166286285?text=${encodeURIComponent(message)}`, "_blank");
+  window.open(
+    "https://wa.me/2348166286285?text=" + encodeURIComponent(message),
+    "_blank"
+  );
 }
+</script>
 
 /* DAILY QUOTES */
 const quotes = [
   "Success begins when you conquer fear.",
-  "You are stronger than your fear.",
-  "Faith over fear always wins.",
-  "Greatness starts outside comfort zones.",
-  "Your future is bigger than your fear."
+  "Discipline builds destiny.",
+  "Your mindset shapes your future.",
+  "Fear is a liar—move anyway.",
+  "Greatness starts small."
 ];
 
 document.getElementById("quote").innerText =
