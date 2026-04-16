@@ -1,0 +1,26 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inspirational Enlivening</title>
+</head>
+<body>
+  <h1>Inspirational Enlivening</h1>
+  <p>Fear of Failing - ₦2000</p>
+  <button onclick="pay()">Buy Now</button>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    function pay() {
+      var handler = PaystackPop.setup({
+        key: "YOUR_PAYSTACK_PUBLIC_KEY",
+        email: "customer@email.com",
+        amount: 200000,
+        callback: function(response){
+          alert("Payment successful! Download unlocked.");
+        }
+      });
+      handler.openIframe();
+    }
+  </script>
+</body>
+</html>
