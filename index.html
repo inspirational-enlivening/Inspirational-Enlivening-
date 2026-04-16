@@ -1,181 +1,182 @@
-‎<!DOCTYPE html>
-‎<html>
-‎<head>
-‎  <title>Inspirational Enlivening</title>
-‎
-‎  <style>
-‎    body {
-‎      font-family: Arial;
-‎      margin: 0;
-‎      background: #fff;
-‎      text-align: center;
-‎    }
-‎
-‎    header {
-‎      background: #111;
-‎      color: gold;
-‎      padding: 20px;
-‎      font-size: 22px;
-‎      font-weight: bold;
-‎    }
-‎
-‎    .grid {
-‎      display: flex;
-‎      flex-wrap: wrap;
-‎      justify-content: center;
-‎      gap: 20px;
-‎      padding: 20px;
-‎    }
-‎
-‎    .card {
-‎      width: 260px;
-‎      border: 1px solid #ddd;
-‎      border-radius: 10px;
-‎      padding: 15px;
-‎      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-‎    }
-‎
-‎    img {
-‎      width: 100%;
-‎      border-radius: 10px;
-‎    }
-‎
-‎    button {
-‎      background: gold;
-‎      border: none;
-‎      padding: 10px;
-‎      width: 100%;
-‎      margin-top: 10px;
-‎      cursor: pointer;
-‎      font-weight: bold;
-‎    }
-‎
-‎    button:hover {
-‎      background: black;
-‎      color: gold;
-‎    }
-‎
-‎    .section {
-‎      padding: 20px;
-‎    }
-‎
-‎    input, textarea {
-‎      width: 90%;
-‎      padding: 10px;
-‎      margin: 5px 0;
-‎    }
-‎
-‎    .quote {
-‎      background: #f9f9f9;
-‎      padding: 15px;
-‎      margin: 10px;
-‎      border-radius: 10px;
-‎    }
-‎  </style>
-‎</head>
-‎
-‎<body>
-‎
-‎<header>Inspirational Enlivening</header>
-‎
-‎<!-- BOOK STORE -->
-‎<div class="grid">
-‎
-‎  <div class="card">
-‎    <img src="cover.jpg">
-‎    <h3>Fear of Failing</h3>
-‎    <p>₦2000</p>
-‎    <button onclick="buy('Fear of Failing')">Buy</button>
-‎  </div>
-‎
-‎  <div class="card">
-‎    <img src="cover1.jpg">
-‎    <h3>Hunted by the Past</h3>
-‎    <p>live soon</p>
-‎    <button onclick="buy('Power of Discipline')">Buy</button>
-‎  </div>
-‎
-‎  <div class="card">
-‎    <img src="cover2.jpg">
-‎    <h3>Talent for success</h3>
-‎    <p>coming up soon</p>
-‎    <button onclick="buy('Mindset Shift')">Buy</button>
-‎  </div>
-‎
-‎</div>
-‎
-‎<!-- OPAY SECTION -->
-‎<div class="section">
-‎
-‎  <h2>Pay via Opay</h2>
-‎  <h3>8166286285</h3>
-‎
-‎  <h3>Submit Payment via WhatsApp</h3>
-‎
-‎  <input type="text" id="name" placeholder="Your Name">
-‎  <input type="email" id="email" placeholder="Your Email">
-‎  <textarea id="book" placeholder="Book Name"></textarea>
-‎
-‎  <button onclick="submit()">Send Payment Proof</button>
-‎
-‎</div>
-‎
-‎<!-- VIDEO -->
-‎<div class="section">
-‎  <h2>Video</h2>
-‎  <video width="300" controls>
-‎    <source src="video.mp4">
-‎  </video>
-‎</div>
-‎
-‎<!-- QUOTE -->
-‎<div class="section">
-‎  <h2>Daily Quote</h2>
-‎  <div class="quote" id="quote"></div>
-‎</div>
-‎
-‎<script>
-‎let selectedBook = "";
-‎
-‎function buy(book) {
-‎  selectedBook = book;
-‎  document.getElementById("book").value = book;
-‎  window.scrollTo(0, document.body.scrollHeight);
-‎}
-‎
-‎function submit() {
-‎  let name = document.getElementById("name").value;
-‎  let email = document.getElementById("email").value;
-‎  let book = document.getElementById("book").value;
-‎
-‎  if(!name || !email || !book){
-‎    alert("Fill all fields");
-‎    return;
-‎  }
-‎
-‎  let msg = 
-‎`Hello, I paid via Opay.
-‎
-‎Book: ${book}
-‎Name: ${name}
-‎Email: ${email}
-‎Opay: 8166286285`;
-‎
-‎  window.open("https://wa.me/2348166286285?text=" + encodeURIComponent(msg), "_blank");
-‎}
-‎
-‎/* QUOTES */
-‎const quotes = [
-‎  "Success begins when fear ends.",
-‎  "Discipline beats motivation.",
-‎  "You grow through what you go through.",
-‎  "Fear is false evidence appearing real.",
-‎  "Start before you're ready."
-‎];
-‎
-‎document.getElementById("quote").innerText =
-‎  quotes[Math.floor(Math.random() * quotes.length)];
-‎</script>
-‎
-‎</body>
-‎</html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inspirational Enlivening</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fff;
+      text-align: center;
+      color: #333;
+    }
+
+    header {
+      background: #111;
+      color: gold;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      width: 260px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    button {
+      background: gold;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: black;
+      color: gold;
+    }
+
+    .section {
+      padding: 30px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    input, textarea {
+      width: 90%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .quote {
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 10px auto;
+      border-radius: 10px;
+      font-style: italic;
+      max-width: 500px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>Inspirational Enlivening</header>
+
+<!-- BOOK STORE -->
+<div class="grid">
+
+  <div class="card">
+    <img src="cover.jpg" alt="Fear of Failing book cover">
+    <h3>Fear of Failing</h3>
+    <p>₦2000</p>
+    <button onclick="buy('Fear of Failing')">Buy Now</button>
+  </div>
+
+  <div class="card">
+    <img src="cover1.jpg" alt="Hunted by the Past book cover">
+    <h3>Hunted by the Past</h3>
+    <p>Coming Soon</p>
+    <button onclick="buy('Hunted by the Past')">Pre-order</button>
+  </div>
+
+  <div class="card">
+    <img src="cover2.jpg" alt="Talent for Success book cover">
+    <h3>Talent for Success</h3>
+    <p>Coming Soon</p>
+    <button onclick="buy('Talent for Success')">Pre-order</button>
+  </div>
+
+</div>
+
+<!-- OPAY SECTION -->
+<div class="section">
+  <h2>Pay via Opay</h2>
+  <h3>Account: 8166286285</h3>
+
+  <h3>Submit Payment Proof via WhatsApp</h3>
+
+  <input type="text" id="name" placeholder="Your Full Name">
+  <input type="email" id="email" placeholder="Your Email">
+  <textarea id="book" placeholder="Book Name" rows="2"></textarea>
+
+  <button onclick="submit()">Send Payment Proof on WhatsApp</button>
+</div>
+
+<!-- VIDEO -->
+<div class="section">
+  <h2>Watch Video</h2>
+  <video width="300" controls>
+    <source src="video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<!-- QUOTE -->
+<div class="section">
+  <h2>Daily Quote</h2>
+  <div class="quote" id="quote"></div>
+</div>
+
+<script>
+let selectedBook = "";
+
+function buy(book) {
+  selectedBook = book;
+  document.getElementById("book").value = book;
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+function submit() {
+  let name = document.getElementById("name").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let book = document.getElementById("book").value.trim();
+
+  if (!name || !email || !book) {
+    alert("Please fill in all fields");
+    return;
+  }
+
+  let msg = `Hello, I paid via Opay.\n\nBook: ${book}\nName: ${name}\nEmail: ${email}\nOpay Number: 8166286285`;
+
+  window.open("https://wa.me/2348166286285?text=" + encodeURIComponent(msg), "_blank");
+}
+
+/* Random Daily Quote */
+const quotes = [
+  "Success begins when fear ends.",
+  "Discipline beats motivation.",
+  "You grow through what you go through.",
+  "Fear is false evidence appearing real.",
+  "Start before you're ready."
+];
+
+document.getElementById("quote").innerText = 
+  quotes[Math.floor(Math.random() * quotes.length)];
+</script>
+
+</body>
+</html>
