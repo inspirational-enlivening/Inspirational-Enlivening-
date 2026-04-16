@@ -86,7 +86,7 @@
 
     /* Highlight effect when scrolling to payment */
     .highlight {
-      animation: highlightPulse 2s ease-in-out;
+      animation: highlightPulse 2.5s ease-in-out;
     }
 
     @keyframes highlightPulse {
@@ -119,6 +119,12 @@
       font-weight: bold;
       margin-top: 10px;
       display: none;
+    }
+
+    .account-info {
+      font-size: 18px;
+      margin: 15px 0;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -156,7 +162,12 @@
 <!-- OPAY PAYMENT SECTION -->
 <div class="section" id="payment-section">
   <h2>Make Payment via Opay</h2>
-  <h3>Account Number: <strong>8166286285</strong></h3>
+  
+  <div class="account-info">
+    <strong>Account Name:</strong> Ehiokede Isaac Osajie<br>
+    <strong>Account Number:</strong> 8166286285
+  </div>
+
   <p>After making payment, submit your details below</p>
 
   <input type="text" id="name" placeholder="Your Full Name">
@@ -213,7 +224,7 @@ function submit() {
     return;
   }
 
-  let msg = `Hello, I paid via Opay.\n\nBook: ${book}\nName: ${name}\nEmail: ${email}\nOpay Account: 8166286285`;
+  let msg = `Hello, I paid via Opay.\n\nBook: ${book}\nName: ${name}\nEmail: ${email}\nOpay Account: 8166286285\nAccount Name: Ehiokede Isaac Osajie`;
 
   // Open WhatsApp with the message
   window.open("https://wa.me/2348166286285?text=" + encodeURIComponent(msg), "_blank");
