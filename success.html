@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Received</title>
+</head>
+<body style="text-align:center;font-family:Arial;">
+
+  <h1>✅ Order Received</h1>
+
+  <p>Your Order ID:</p>
+  <h2 id="order"></h2>
+
+  <p>We will confirm your payment shortly.</p>
+
+  <p>After confirmation, you will receive your download link.</p>
+
+  <button onclick="goHome()">Back to Store</button>
+
+<script>
+let params = new URLSearchParams(window.location.search);
+document.getElementById("order").innerText = params.get("id");
+
+function goHome(){
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
