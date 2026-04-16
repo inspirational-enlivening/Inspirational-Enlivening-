@@ -2,35 +2,95 @@
 <html>
 <head>
   <title>Inspirational Enlivening</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background: #111;
+      color: gold;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .book-card {
+      max-width: 300px;
+      margin: auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .price {
+      color: gold;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      background: gold;
+      color: black;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: black;
+      color: gold;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Inspirational Enlivening</h1>
+<header>Inspirational Enlivening</header>
 
-  <h2>Fear of Failing</h2>
-  <p>Price: ₦2000</p>
+<div class="container">
+  <div class="book-card">
+    <h2>Fear of Failing</h2>
+    <p class="price">₦2000</p>
 
-  <p>
-    Fear has stopped many people from stepping into their full potential.
-    This book will help you overcome the fear of failure and pursue your purpose boldly.
-  </p>
+    <p>
+      Fear has stopped many people from stepping into their full potential.
+      This book will help you overcome the fear of failure and pursue your purpose boldly.
+    </p>
 
-  <button onclick="pay()">Buy Now</button>
+    <button onclick="pay()">Buy Now</button>
+  </div>
+</div>
 
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-  <script>
-    function pay() {
-      var handler = PaystackPop.setup({
-        key: "YOUR_PAYSTACK_PUBLIC_KEY",
-        email: "customer@email.com",
-        amount: 200000,
-        callback: function(response){
-          alert("Payment successful!");
-        }
-      });
-      handler.openIframe();
-    }
-  </script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  function pay() {
+    var handler = PaystackPop.setup({
+      key: "YOUR_PAYSTACK_PUBLIC_KEY",
+      email: "customer@email.com",
+      amount: 200000,
+      callback: function(response){
+        alert("Payment successful! You will receive your book.");
+      }
+    });
+    handler.openIframe();
+  }
+</script>
 
 </body>
 </html>
