@@ -23,13 +23,19 @@
       padding: 20px;
     }
 
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
     .card {
-      max-width: 400px;
-      margin: auto;
+      width: 280px;
       border: 1px solid #ddd;
       border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 15px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
 
     img {
@@ -37,19 +43,14 @@
       border-radius: 10px;
     }
 
-    input, textarea {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-    }
-
     button {
       background: gold;
       border: none;
-      padding: 12px;
+      padding: 10px;
       cursor: pointer;
       font-weight: bold;
-      width: 95%;
+      width: 100%;
+      margin-top: 10px;
     }
 
     button:hover {
@@ -64,14 +65,16 @@
     .quote-box {
       background: #f9f9f9;
       padding: 15px;
-      margin-top: 10px;
       border-radius: 10px;
+      margin-top: 10px;
     }
 
-    video {
+    input, textarea {
       width: 90%;
-      border-radius: 10px;
+      padding: 10px;
+      margin-top: 5px;
     }
+
   </style>
 </head>
 
@@ -81,67 +84,85 @@
 
 <div class="container">
 
-  <!-- BOOK SECTION -->
-  <div class="card">
+  <!-- BOOK STORE -->
+  <h2>📚 Our Books</h2>
 
-    <img src="cover.jpg" alt="Book Cover">
+  <div class="grid">
 
-    <h2>Fear of Failing</h2>
-    <p><b>₦2000</b></p>
+    <!-- BOOK 1 -->
+    <div class="card">
+      <img src="cover1.jpg">
+      <h3>Fear of Failing</h3>
+      <p>₦2000</p>
+      <button onclick="buy('Fear of Failing')">Buy Now</button>
+    </div>
 
-    <p>
-      Fear has stopped many people from stepping into their full potential.
-      This book helps you overcome fear and pursue your purpose boldly.
-    </p>
+    <!-- BOOK 2 -->
+    <div class="card">
+      <img src="cover2.jpg">
+      <h3>Power of Discipline</h3>
+      <p>₦2500</p>
+      <button onclick="buy('Power of Discipline')">Buy Now</button>
+    </div>
 
-    <h3>Pay via Opay</h3>
+    <!-- BOOK 3 -->
+    <div class="card">
+      <img src="cover3.jpg">
+      <h3>Mindset Shift</h3>
+      <p>₦3000</p>
+      <button onclick="buy('Mindset Shift')">Buy Now</button>
+    </div>
+
+  </div>
+
+  <!-- OPAY SECTION -->
+  <div class="section">
+    <h2>💳 Pay via Opay</h2>
     <p><b>8166286285</b></p>
 
-    <h4>Upload Payment Details</h4>
+    <h3>Submit Payment Proof</h3>
 
     <input type="text" id="name" placeholder="Your Name">
     <input type="email" id="email" placeholder="Your Email">
-    <textarea id="note" placeholder="Optional message"></textarea>
+    <textarea id="book" placeholder="Book you are buying"></textarea>
 
-    <button onclick="submitPayment()">Submit & Contact Me</button>
-
+    <button onclick="submitPayment()">Send via WhatsApp</button>
   </div>
 
   <!-- DAILY QUOTE -->
   <div class="section">
-    <h2>Daily Quote</h2>
+    <h2>✨ Daily Quote</h2>
     <div class="quote-box" id="quote"></div>
-  </div>
-
-  <!-- VIDEO SECTION -->
-  <div class="section">
-    <h2>Inspirational QUOTE By Inspirational </h2>
-
-    <!-- Replace with your YouTube embed -->
-    <video controls>
-      <source src="video.mp4" type="video/mp4">
-    </video>
   </div>
 
 </div>
 
 <script>
+let selectedBook = "";
+
+function buy(book) {
+  selectedBook = book;
+  document.getElementById("book").value = book;
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
 function submitPayment() {
   let name = document.getElementById("name").value;
   let email = document.getElementById("email").value;
-  let note = document.getElementById("note").value;
+  let book = document.getElementById("book").value;
 
-  if(name === "" || email === "") {
-    alert("Please fill in your name and email");
+  if(name === "" || email === "" || book === "") {
+    alert("Please fill all fields");
     return;
   }
 
   let message =
-`Hello, I just made payment for Fear of Failing.
+`Hello, I made payment via Opay.
 
+Book: ${book}
 Name: ${name}
 Email: ${email}
-Note: ${note}`;
+Opay Number: 8166286285`;
 
   window.open(`https://wa.me/2348166286285?text=${encodeURIComponent(message)}`, "_blank");
 }
@@ -149,10 +170,10 @@ Note: ${note}`;
 /* DAILY QUOTES */
 const quotes = [
   "Success begins when you conquer fear.",
-  "You are stronger than your fear.",
-  "Faith over fear always wins.",
-  "Greatness starts outside comfort zones.",
-  "Your future is bigger than your fear."
+  "Discipline builds destiny.",
+  "Your mindset shapes your future.",
+  "Fear is a liar—move anyway.",
+  "Greatness starts small."
 ];
 
 document.getElementById("quote").innerText =
