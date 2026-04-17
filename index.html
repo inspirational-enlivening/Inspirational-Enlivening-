@@ -1,115 +1,366 @@
-‎<!DOCTYPE html>
-‎<html lang="en">
-‎<head>
-‎  <meta charset="UTF-8">
-‎  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-‎  <title>Inspirational Enlivening - Book Store</title>
-‎  <style>
-‎    :root { --gold: #f0c14b; --dark: #111; }
-‎    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f4f4; color: #333; }
-‎    header { background: var(--dark); color: white; padding: 18px; font-size: 26px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 100; }
-‎    .nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
-‎    button { background: var(--gold); color: #111; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-‎    button:hover { background: #111; color: var(--gold); }
-‎    .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; padding: 30px 20px; }
-‎    .card { width: 270px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.12); transition: all 0.3s; }
-‎    .card:hover { transform: translateY(-8px); }
-‎    img { width: 100%; height: 300px; object-fit: cover; }
-‎    .card-content { padding: 16px; text-align: center; }
-‎    .price { font-size: 22px; font-weight: bold; margin: 8px 0; }
-‎    .cart-sidebar { position: fixed; right: -420px; top: 0; width: 400px; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.25); transition: right 0.4s; padding: 20px; overflow-y: auto; z-index: 200; }
-‎    .cart-sidebar.open { right: 0; }
-‎    .close-btn { font-size: 32px; cursor: pointer; float: right; }
-‎    .confirmation, .account-page, .admin-page { max-width: 700px; margin: 40px auto; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.15); display: none; }
-‎    .order-id { font-family: monospace; background: #f8f8f8; padding: 12px; border-radius: 6px; color: #d32f2f; font-weight: bold; }
-‎  </style>
-‎</head>
-‎<body>
-‎
-‎<header>Inspirational Enlivening Book Store</header>
-‎
-‎<div class="nav">
-‎  <div><strong>Shop</strong></div>
-‎  <div>
-‎    <button onclick="showLogin()">Login / Register</button>
-‎    <button onclick="showMyAccount()">My Account</button>
-‎    <button onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
-‎    <button onclick="showAdmin()">Admin</button>
-‎  </div>
-‎</div>
-‎
-‎<!-- Auth Modal -->
-‎<div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:300; align-items:center; justify-content:center;">
-‎  <div style="background:white; padding:30px; border-radius:12px; width:320px; max-width:90%;">
-‎    <h2 id="auth-title">Login</h2>
-‎    <input type="email" id="auth-email" placeholder="Email" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;"><br>
-‎    <input type="password" id="auth-pass" placeholder="Password" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;"><br>
-‎    <button onclick="handleAuth()" id="auth-btn" style="width:100%;">Login</button>
-‎    <p style="margin-top:15px; text-align:center; cursor:pointer;" id="auth-switch" onclick="toggleAuthMode()">Don't have an account? Register</p>
-‎    <button onclick="closeAuthModal()" style="background:#555; color:white; width:100%; margin-top:10px;">Close</button>
-‎  </div>
-‎</div>
-‎
-‎<!-- Books Grid -->
-‎<div class="grid" id="books-grid"></div>
-‎
-‎<!-- Cart Sidebar, Confirmation, My Account, Admin sections remain the same as you had -->
-‎
-‎<script>
-‎// ====================== DATA ======================
-‎let books = JSON.parse(localStorage.getItem("books")) || [
-‎  { id: 1, title: "Fear of Failing",     price: 2000, img: "cover.jpg" },
-‎  { id: 2, title: "Hunted by the Past",  price: 2500, img: "cover1.jpg" },
-‎  { id: 3, title: "Talent for Success",  price: 2200, img: "cover2.jpg" }
-‎];
-‎
-‎let quotes = JSON.parse(localStorage.getItem("quotes")) || ["Success begins when fear ends.", "Discipline beats motivation every day."];
-‎let videoUrl = localStorage.getItem("videoUrl") || "video.mp4";
-‎
-‎let cart = [];
-‎let currentUser = null;
-‎let currentOrderForWA = null;
-‎const ADMIN_PASS = "admin123";   // Change this after deployment!
-‎
-‎// ====================== RENDER ======================
-‎function renderBooks() {
-‎  const grid = document.getElementById("books-grid");
-‎  grid.innerHTML = "";
-‎
-‎  books.forEach(book => {
-‎    const card = document.createElement("div");
-‎    card.className = "card";
-‎    card.innerHTML = `
-‎      <img src="\( {book.img}" alt=" \){book.title}" 
-‎           onerror="this.src='https://via.placeholder.com/300x400?text=Book+Cover'">
-‎      <div class="card-content">
-‎        <h3>${book.title}</h3>
-‎        <p class="price">₦${book.price}</p>
-‎        <button onclick="addToCart(${book.id})">Add to Cart</button>
-‎        <button onclick="buyNow(${book.id})">Buy Now</button>
-‎      </div>
-‎    `;
-‎    grid.appendChild(card);
-‎  });
-‎}
-‎
-‎// Rest of your functions (addToCart, buyNow, updateCart, placeOrder, etc.) remain mostly the same.
-‎// I fixed the broken template literals in renderAdminBooks and updateCart too.
-‎
-‎function renderAdminBooks() {
-‎  const list = document.getElementById("admin-books-list");
-‎  list.innerHTML = books.map((book, i) => `
-‎    <div style="border:1px solid #ddd; padding:10px; margin:8px 0;">
-‎      \( {book.title} — ₦ \){book.price}
-‎      <button onclick="removeBook(${i})" style="float:right;background:red;color:white;">Remove</button>
-‎    </div>
-‎  `).join("");
-‎}
-‎
-‎// ... (the rest of your script stays the same - only the broken parts were fixed)
-‎
-‎renderBooks();
-‎updateCart();
-‎</script>
-‎</body>
-‎</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspirational Enlivening - Book Store</title>
+  <style>
+    :root { --gold: #f0c14b; --dark: #111; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f4f4f4; color: #333; }
+    header { background: var(--dark); color: white; padding: 18px; font-size: 26px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 100; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 10px; }
+    button { background: var(--gold); color: #111; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    button:hover { background: #111; color: var(--gold); }
+    .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; padding: 30px 20px; }
+    .card { width: 270px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.12); transition: all 0.3s; }
+    .card:hover { transform: translateY(-8px); }
+    img { width: 100%; height: 300px; object-fit: cover; }
+    .card-content { padding: 16px; text-align: center; }
+    .price { font-size: 22px; font-weight: bold; margin: 8px 0; }
+    .cart-sidebar { position: fixed; right: -420px; top: 0; width: 400px; height: 100%; background: white; box-shadow: -5px 0 25px rgba(0,0,0,0.25); transition: right 0.4s; padding: 20px; overflow-y: auto; z-index: 200; }
+    .cart-sidebar.open { right: 0; }
+    .close-btn { font-size: 32px; cursor: pointer; float: right; }
+    .confirmation, .account-page, .admin-page { max-width: 700px; margin: 40px auto; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.15); display: none; }
+    .order-id { font-family: monospace; background: #f8f8f8; padding: 12px; border-radius: 6px; color: #d32f2f; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<header>Inspirational Enlivening Book Store</header>
+
+<div class="nav">
+  <div><strong>Shop</strong></div>
+  <div>
+    <button onclick="showLogin()">Login / Register</button>
+    <button onclick="showMyAccount()">My Account</button>
+    <button onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+    <button onclick="showAdmin()">Admin</button>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div id="auth-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:300; align-items:center; justify-content:center;">
+  <div style="background:white; padding:30px; border-radius:12px; width:320px; max-width:90%;">
+    <h2 id="auth-title">Login</h2>
+    <input type="email" id="auth-email" placeholder="Email" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;"><br>
+    <input type="password" id="auth-pass" placeholder="Password" style="width:100%; padding:10px; margin:10px 0; box-sizing:border-box;"><br>
+    <button onclick="handleAuth()" id="auth-btn" style="width:100%;">Login</button>
+    <p style="margin-top:15px; text-align:center; cursor:pointer;" id="auth-switch" onclick="toggleAuthMode()">Don't have an account? Register</p>
+    <button onclick="closeAuthModal()" style="background:#555; color:white; width:100%; margin-top:10px;">Close</button>
+  </div>
+</div>
+
+<!-- Books Grid -->
+<div class="grid" id="books-grid"></div>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <span class="close-btn" onclick="toggleCart()">×</span>
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <hr>
+  <p><strong>Total: ₦<span id="cart-total">0</span></strong></p>
+  <button onclick="placeOrder()" style="width:100%; padding:15px; font-size:18px; margin-top:10px;">Place Order</button>
+</div>
+
+<!-- Order Confirmation -->
+<div id="confirmation-page" class="confirmation">
+  <h1 style="color:#2e7d32;">✅ Order Placed Successfully!</h1>
+  <p>Order ID: <span class="order-id" id="order-id-display"></span></p>
+  <div id="order-summary"></div>
+  <div style="background:#fff9e6; padding:20px; border-radius:10px; margin:20px 0;">
+    <strong>Payment Details</strong><br>
+    Account Name: <strong>Ehiokede Isaac Osajie</strong><br>
+    Account Number: <strong>8166286285</strong> (Opay)
+  </div>
+  <button onclick="sendToWhatsApp()" style="width:100%; padding:14px;">Send Payment Proof via WhatsApp</button>
+  <button onclick="resetToShop()" style="background:#555; color:white; width:100%; margin-top:10px;">Return to Shop</button>
+</div>
+
+<!-- My Account -->
+<div id="my-account-page" class="account-page">
+  <h1>My Account</h1>
+  <button onclick="logout()">Logout</button>
+  <h2>My Orders</h2>
+  <div id="my-orders"></div>
+</div>
+
+<!-- Admin Page -->
+<div id="admin-page" class="admin-page">
+  <h1>Admin Panel</h1>
+  <input type="password" id="admin-pass" placeholder="Enter admin password" style="width:100%; padding:10px; margin:10px 0;">
+  <button onclick="checkAdminPass()">Enter Admin Area</button>
+
+  <div id="admin-content" style="display:none; margin-top:20px;">
+    <h2>Add New Book</h2>
+    <input type="text" id="new-title" placeholder="Book Title" style="width:100%; padding:8px; margin:5px 0;">
+    <input type="number" id="new-price" placeholder="Price in ₦" style="width:100%; padding:8px; margin:5px 0;">
+    <input type="text" id="new-img" placeholder="Image URL (e.g. https://i.imgur.com/xxx.jpg)" style="width:100%; padding:8px; margin:5px 0;">
+    <button onclick="addNewBook()">Add Book</button>
+
+    <h3>Current Books</h3>
+    <div id="admin-books-list"></div>
+
+    <h2>Manage Quotes</h2>
+    <input type="text" id="new-quote" placeholder="New Quote" style="width:100%; padding:8px; margin:5px 0;">
+    <button onclick="addNewQuote()">Add Quote</button>
+    <div id="admin-quotes-list"></div>
+
+    <h2>Video URL</h2>
+    <input type="text" id="new-video" placeholder="Video URL" style="width:100%; padding:8px; margin:5px 0;">
+    <button onclick="updateVideo()">Update Video</button>
+  </div>
+</div>
+
+<script>
+// ====================== DATA ======================
+let books = JSON.parse(localStorage.getItem("books")) || [
+  { id: 1, title: "Fear of Failing", price: 2000, img: "https://via.placeholder.com/300x400?text=Fear+of+Failing" },
+  { id: 2, title: "Hunted by the Past", price: 2500, img: "https://via.placeholder.com/300x400?text=Hunted+by+the+Past" },
+  { id: 3, title: "Talent for Success", price: 2200, img: "https://via.placeholder.com/300x400?text=Talent+for+Success" }
+];
+
+let quotes = JSON.parse(localStorage.getItem("quotes")) || ["Success begins when fear ends.", "Discipline beats motivation every day."];
+let videoUrl = localStorage.getItem("videoUrl") || "video.mp4";
+
+let cart = [];
+let currentUser = null;
+let currentOrderForWA = null;
+const ADMIN_PASS = "admin123";   // ← CHANGE THIS AFTER DEPLOYMENT!
+
+// ====================== RENDER ======================
+function renderBooks() {
+  const grid = document.getElementById("books-grid");
+  grid.innerHTML = "";
+  books.forEach(book => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="\( {book.img}" alt=" \){book.title}" onerror="this.src='https://via.placeholder.com/300x400?text=Book+Cover'">
+      <div class="card-content">
+        <h3>${book.title}</h3>
+        <p class="price">₦${book.price}</p>
+        <button onclick="addToCart(${book.id})">Add to Cart</button>
+        <button onclick="buyNow(${book.id})">Buy Now</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderAdminBooks() {
+  const list = document.getElementById("admin-books-list");
+  list.innerHTML = books.map((book, i) => `
+    <div style="border:1px solid #ddd; padding:10px; margin:8px 0;">
+      \( {book.title} — ₦ \){book.price}
+      <button onclick="removeBook(${i})" style="float:right;background:red;color:white;">Remove</button>
+    </div>
+  `).join("");
+}
+
+function renderAdminQuotes() {
+  document.getElementById("admin-quotes-list").innerHTML = quotes.map(q => `<div style="padding:8px;border-bottom:1px solid #eee;">${q}</div>`).join("");
+}
+
+// ====================== CART ======================
+function addToCart(id) {
+  const book = books.find(b => b.id === id);
+  const existing = cart.find(item => item.id === id);
+  if (existing) existing.quantity = (existing.quantity || 1) + 1;
+  else cart.push({...book, quantity: 1});
+  updateCart();
+}
+
+function buyNow(id) {
+  const book = books.find(b => b.id === id);
+  cart = [{...book, quantity: 1}];
+  updateCart();
+  toggleCart();
+}
+
+function updateCart() {
+  let itemsHTML = "";
+  let total = 0;
+  cart.forEach((item, idx) => {
+    const itemTotal = item.price * (item.quantity || 1);
+    total += itemTotal;
+    itemsHTML += `
+      <div style="margin:10px 0;padding-bottom:10px;border-bottom:1px solid #eee;">
+        ${item.title} × \( {item.quantity||1} — ₦ \){itemTotal}
+        <button onclick="removeFromCart(${idx})" style="float:right;background:red;color:white;padding:2px 8px;">Remove</button>
+      </div>`;
+  });
+  document.getElementById("cart-items").innerHTML = itemsHTML || "<p>Cart is empty</p>";
+  document.getElementById("cart-total").textContent = total;
+  document.getElementById("cart-count").textContent = cart.reduce((s, i) => s + (i.quantity||1), 0);
+}
+
+function removeFromCart(idx) {
+  cart.splice(idx, 1);
+  updateCart();
+}
+
+function toggleCart() {
+  document.getElementById("cart-sidebar").classList.toggle("open");
+}
+
+// ====================== ORDER ======================
+function placeOrder() {
+  if (cart.length === 0) return alert("Cart is empty!");
+  const orderId = "ORD-" + Date.now();
+  const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+
+  const order = { orderId, date: new Date().toLocaleString(), items: [...cart], total, status: "Pending Payment" };
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  currentOrderForWA = {orderId, cart: [...cart], total};
+
+  document.getElementById("books-grid").style.display = "none";
+  document.getElementById("confirmation-page").style.display = "block";
+  document.getElementById("order-id-display").textContent = orderId;
+
+  let summary = "<h3>Order Summary</h3>";
+  cart.forEach(item => summary += `<p>${item.title} × \( {item.quantity||1} — ₦ \){item.price*(item.quantity||1)}</p>`);
+  summary += `<p><strong>Total: ₦${total}</strong></p>`;
+  document.getElementById("order-summary").innerHTML = summary;
+
+  toggleCart();
+}
+
+function sendToWhatsApp() {
+  if (!currentOrderForWA) return;
+  let msg = `New Order from Website\nOrder ID: ${currentOrderForWA.orderId}\n\n`;
+  currentOrderForWA.cart.forEach(i => msg += `• ${i.title} × ${i.quantity||1}\n`);
+  msg += `\nTotal: ₦${currentOrderForWA.total}\n\nPayment Details:\nAccount Name: Ehiokede Isaac Osajie\nAccount Number: 8166286285 (Opay)\n\nPlease confirm payment and send download access code.`;
+  window.open(`https://wa.me/2348166286285?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+function resetToShop() {
+  cart = [];
+  document.getElementById("confirmation-page").style.display = "none";
+  document.getElementById("books-grid").style.display = "flex";
+  updateCart();
+}
+
+// ====================== USER AUTH ======================
+function showLogin() { 
+  document.getElementById("auth-modal").style.display = "flex"; 
+  document.getElementById("auth-title").textContent = "Login";
+  document.getElementById("auth-btn").textContent = "Login";
+}
+
+function toggleAuthMode() {
+  const isLogin = document.getElementById("auth-title").textContent === "Login";
+  document.getElementById("auth-title").textContent = isLogin ? "Register" : "Login";
+  document.getElementById("auth-btn").textContent = isLogin ? "Register" : "Login";
+  document.getElementById("auth-switch").textContent = isLogin ? "Already have an account? Login" : "Don't have an account? Register";
+}
+
+function handleAuth() {
+  const email = document.getElementById("auth-email").value.trim();
+  const pass = document.getElementById("auth-pass").value.trim();
+  if (!email || !pass) return alert("Please fill all fields");
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (document.getElementById("auth-title").textContent === "Register") {
+    if (users.some(u => u.email === email)) return alert("Email already registered");
+    users.push({email, pass});
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Account created! You can now login.");
+    toggleAuthMode();
+  } else {
+    const user = users.find(u => u.email === email && u.pass === pass);
+    if (!user) return alert("Incorrect email or password");
+    currentUser = email;
+    alert("Login successful!");
+    closeAuthModal();
+  }
+}
+
+function closeAuthModal() { document.getElementById("auth-modal").style.display = "none"; }
+
+function logout() {
+  currentUser = null;
+  alert("Logged out");
+  showMyAccount();
+}
+
+function showMyAccount() {
+  document.getElementById("my-account-page").style.display = "block";
+  document.getElementById("books-grid").style.display = "none";
+  const ordersDiv = document.getElementById("my-orders");
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  ordersDiv.innerHTML = orders.length ? orders.map(o => `
+    <div style="border:1px solid #ddd; padding:15px; margin:10px 0;">
+      <strong>Order ID:</strong> ${o.orderId}<br>
+      Date: ${o.date}<br>
+      Total: ₦${o.total}<br>
+      Status: ${o.status}
+    </div>`).join("") : "<p>You have no orders yet.</p>";
+}
+
+// ====================== ADMIN ======================
+function showAdmin() {
+  document.getElementById("admin-page").style.display = "block";
+  document.getElementById("books-grid").style.display = "none";
+  document.getElementById("admin-content").style.display = "none";
+}
+
+function checkAdminPass() {
+  if (document.getElementById("admin-pass").value === ADMIN_PASS) {
+    document.getElementById("admin-content").style.display = "block";
+    renderAdminBooks();
+    renderAdminQuotes();
+  } else {
+    alert("Incorrect admin password");
+  }
+}
+
+function addNewBook() {
+  const title = document.getElementById("new-title").value.trim();
+  const price = parseInt(document.getElementById("new-price").value);
+  const img = document.getElementById("new-img").value.trim();
+  if (!title || !price || !img) return alert("Fill all fields");
+  books.push({ id: Date.now(), title, price, img });
+  localStorage.setItem("books", JSON.stringify(books));
+  renderBooks();
+  renderAdminBooks();
+  alert("Book added successfully!");
+}
+
+function removeBook(index) {
+  if (confirm("Delete this book?")) {
+    books.splice(index, 1);
+    localStorage.setItem("books", JSON.stringify(books));
+    renderBooks();
+    renderAdminBooks();
+  }
+}
+
+function addNewQuote() {
+  const q = document.getElementById("new-quote").value.trim();
+  if (q) {
+    quotes.push(q);
+    localStorage.setItem("quotes", JSON.stringify(quotes));
+    renderAdminQuotes();
+  }
+}
+
+function updateVideo() {
+  const url = document.getElementById("new-video").value.trim();
+  if (url) {
+    videoUrl = url;
+    localStorage.setItem("videoUrl", url);
+    alert("Video URL updated!");
+  }
+}
+
+// ====================== INIT ======================
+renderBooks();
+updateCart();
+</script>
+</body>
+</html>
