@@ -1,59 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Dashboard</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Inspirational Enlivening</title>
   <style>
-    body {
-      font-family: Arial;
+    :root { --gold: #f0c14b; --dark: #111; }
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      margin: 0; 
+      background: #f4f4f4; 
+      color: #333; 
+    }
+    header { 
+      background: var(--dark); 
+      color: white; 
+      padding: 20px; 
+      font-size: 26px; 
+      text-align: center; 
+      font-weight: bold; 
+    }
+    .container { 
+      max-width: 900px; 
+      margin: 30px auto; 
+      padding: 20px; 
+    }
+    .order-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       padding: 20px;
+      margin-bottom: 20px;
     }
-
-    .order {
-      border: 1px solid #ddd;
-      padding: 10px;
+    .order-header {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d32f2f;
       margin-bottom: 10px;
-      border-radius: 8px;
     }
-
-    button {
-      padding: 5px 10px;
-      margin-top: 5px;
-      cursor: pointer;
+    button { 
+      background: var(--gold); 
+      color: #111; 
+      border: none; 
+      padding: 10px 16px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      margin: 5px 5px 5px 0;
     }
+    button:hover { background: #111; color: var(--gold); }
+    button.red { background: #d32f2f; color: white; }
+    button.red:hover { background: #b71c1c; }
+    .status { 
+      font-weight: bold; 
+      padding: 5px 12px; 
+      border-radius: 20px; 
+      display: inline-block; 
+    }
+    .pending { background: #fff3cd; color: #856404; }
+    .paid { background: #d4edda; color: #155724; }
   </style>
 </head>
-
 <body>
 
-<h1>📊 Admin Dashboard</h1>
+<header>📊 Admin Dashboard - Inspirational Enlivening</header>
 
-<div id="orders"></div>
+<div class="container">
+  <div style="margin-bottom:20px;">
+    <button onclick="loadOrders()">🔄 Refresh Orders</button>
+    <button onclick="clearAllOrders()" class="red">🗑️ Clear All Orders</button>
+    <a href="index.html" style="text-decoration:none;">
+      <button>← Back to Shop</button>
+    </a>
+  </div>
+
+  <h2>All Customer Orders</h2>
+  <div id="orders-container"></div>
+</div>
 
 <script>
-let container = document.getElementById("orders");
+// Load and display all orders from localStorage
+function loadOrders() {
+  const container = document.getElementById("orders-container");
+  container.innerHTML = "";
 
-for (let i = 0; i < localStorage.length; i++) {
-  let key = localStorage.key(i);
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
 
-  if(key.startsWith("IE-")) {
-    let order = JSON.parse(localStorage.getItem(key));
+  if (orders.length === 0) {
+    container.innerHTML = "<p style='text-align:center; color:#666;'>No orders yet. Make some test purchases from the shop.</p>";
+    return;
+  }
 
-    let div = document.createElement("div");
-    div.className = "order";
+  orders.forEach((order, index) => {
+    const div = document.createElement("div");
+    div.className = "order-card";
+
+    let itemsHTML = order.items.map(item => 
+      `${item.title} × \( {item.quantity || 1} (₦ \){item.price * (item.quantity || 1)})`
+    ).join("<br>");
 
     div.innerHTML = `
-      <b>Order ID:</b> ${order.id} <br>
-      <b>Book:</b> ${order.book} <br>
-      <b>Name:</b> ${order.name} <br>
-      <b>Email:</b> ${order.email} <br>
-      <b>Note:</b> ${order.note} <br>
-      <b>Status:</b> ${order.status} <br>
+      <div class="order-header">Order ID: ${order.orderId}</div>
+      <p><strong>Date:</strong> ${order.date}</p>
+      <p><strong>Items:</strong><br>${itemsHTML}</p>
+      <p><strong>Total:</strong> ₦${order.total}</p>
+      <p><strong>Status:</strong> 
+        <span class="status ${order.status === 'Pending Payment' ? 'pending' : 'paid'}">
+          ${order.status}
+        </span>
+      </p>
+
+      <button onclick="updateOrderStatus(${index}, 'Payment Confirmed')">Mark as Paid</button>
+      <button onclick="updateOrderStatus(${index}, 'Completed')">Mark as Completed</button>
+      <button onclick="deleteOrder(${index})" class="red">Delete Order</button>
     `;
 
     container.appendChild(div);
+  });
+}
+
+// Update order status
+function updateOrderStatus(index, newStatus) {
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  if (orders[index]) {
+    orders[index].status = newStatus;
+    localStorage.setItem("orders", JSON.stringify(orders));
+    alert(`Order status updated to: ${newStatus}`);
+    loadOrders();
   }
 }
+
+// Delete a single order
+function deleteOrder(index) {
+  if (!confirm("Delete this order permanently?")) return;
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.splice(index, 1);
+  localStorage.setItem("orders", JSON.stringify(orders));
+  loadOrders();
+}
+
+// Clear all orders (for testing)
+function clearAllOrders() {
+  if (!confirm("Clear ALL orders? This cannot be undone.")) return;
+  localStorage.removeItem("orders");
+  loadOrders();
+}
+
+// Auto-load orders when page opens
+loadOrders();
 </script>
 
 </body>
