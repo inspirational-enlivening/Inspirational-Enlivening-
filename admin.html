@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .order {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📊 Admin Dashboard</h1>
+
+<div id="orders"></div>
+
+<script>
+let container = document.getElementById("orders");
+
+for (let i = 0; i < localStorage.length; i++) {
+  let key = localStorage.key(i);
+
+  if(key.startsWith("IE-")) {
+    let order = JSON.parse(localStorage.getItem(key));
+
+    let div = document.createElement("div");
+    div.className = "order";
+
+    div.innerHTML = `
+      <b>Order ID:</b> ${order.id} <br>
+      <b>Book:</b> ${order.book} <br>
+      <b>Name:</b> ${order.name} <br>
+      <b>Email:</b> ${order.email} <br>
+      <b>Note:</b> ${order.note} <br>
+      <b>Status:</b> ${order.status} <br>
+    `;
+
+    container.appendChild(div);
+  }
+}
+</script>
+
+</body>
+</html>
