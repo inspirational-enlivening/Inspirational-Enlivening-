@@ -51,7 +51,7 @@
 ‎</div>
 ‎
 ‎<!-- Books Grid -->
-‎<img src="${book.img}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/300x400?text=Book+Cover'">
+‎<div class="grid" id="books-grid"></div>
 ‎
 ‎<!-- Cart Sidebar -->
 ‎<div class="cart-sidebar" id="cart-sidebar">
@@ -99,7 +99,7 @@
 ‎    <button onclick="addNewBook()">Add Book</button>
 ‎
 ‎    <h3>Current Books</h3>
-‎    <img src="${book.img}" alt="${book.title}" onerror="this.src='https://via.placeholder.com/300x400?text=Book+Cover'">
+‎    <div id="admin-books-list"></div>
 ‎
 ‎    <h2>Manage Quotes</h2>
 ‎    <input type="text" id="new-quote" placeholder="New Quote" style="width:100%; padding:8px; margin:5px 0;">
@@ -364,4 +364,4 @@
 ‎</script>
 ‎</body>
 ‎</html>
-diviv
+‎
